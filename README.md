@@ -38,3 +38,115 @@ This application is designed to help track the time spent on sports activities d
 Compile the code and run tests:
 ```bash
 mvn clean install
+```
+
+### 3. Run the Application
+To execute the application locally, use:
+```bash
+mvn exec:java -Dexec.mainClass="Main"
+```
+
+### 4. Testing
+To run the tests, use:
+```bash
+mvn test
+```
+
+### 5. Continuous Integration with Jenkins
+1. **Set up Jenkins**: Install Jenkins on your system or use a cloud-based instance.
+2. **Create a Pipeline**: In Jenkins, create a new pipeline job and use the following stages:
+   - **Checkout**: Pull the latest code from your GitHub repository.
+   - **Build**: Use Maven to compile and package the application.
+   - **Test**: Run unit tests using Maven.
+   - **Code Coverage**: Generate a code coverage report using JaCoCo.
+   - **Docker Build**: Build a Docker image using the Dockerfile in the project.
+   - **Docker Push**: Push the Docker image to Docker Hub.
+
+3. **Sample Pipeline Script**:
+    ```groovy
+    pipeline {
+        agent any
+        stages {
+            stage('Checkout') {
+                steps {
+                    git url: 'https://github.com/your-username/sports-activity-logger.git', branch: 'main'
+                }
+            }
+            stage('Build') {
+                steps {
+                    sh 'mvn clean package'
+                }
+            }
+            stage('Test') {
+                steps {
+                    sh 'mvn test'
+                }
+            }
+            stage('Code Coverage') {
+                steps {
+                    sh 'mvn jacoco:report'
+                }
+            }
+            stage('Docker Build and Push') {
+                steps {
+                    script {
+                        withCredentials([string(credentialsId: 'docker-hub-credentials', variable: 'DOCKER_HUB_PASSWORD')]) {
+                            sh 'docker login -u your-dockerhub-username -p $DOCKER_HUB_PASSWORD'
+                            sh 'docker build -t your-dockerhub-username/sportsactivitylogger .'
+                            sh 'docker push your-dockerhub-username/sportsactivitylogger'
+                        }
+                    }
+                }
+            }
+        }
+        post {
+            always {
+                cleanWs() // Clean up workspace
+            }
+        }
+    }
+    ```
+
+### 6. Containerization with Docker
+1. **Create a Dockerfile**: Add the following `Dockerfile` to your project directory:
+    ```dockerfile
+    # Use Maven to build the application
+    FROM maven:3.8.4-openjdk-17 AS build
+    WORKDIR /app
+    COPY pom.xml /app/
+    COPY . /app/
+    RUN mvn clean package
+
+    # Use OpenJDK to run the application
+    FROM openjdk:17-jdk-slim
+    WORKDIR /app
+    COPY --from=build /app/target/SportsActivityLogger.jar /app/SportsActivityLogger.jar
+    CMD ["java", "-jar", "SportsActivityLogger.jar"]
+    ```
+2. **Build the Docker Image**:
+    ```bash
+    docker build -t your-dockerhub-username/sportsactivitylogger .
+    ```
+3. **Push the Docker Image to Docker Hub**:
+    ```bash
+    docker push your-dockerhub-username/sportsactivitylogger
+    ```
+
+### 7. Running the Application in Docker Hub Lab
+1. Go to [Play with Docker](https://labs.play-with-docker.com/) and sign in.
+2. Click "Start" to launch a new Docker environment.
+3. Pull your Docker image:
+    ```bash
+    docker pull your-dockerhub-username/sportsactivitylogger
+    ```
+4. Run the Docker container:
+    ```bash
+    docker run -it --rm your-dockerhub-username/sportsactivitylogger
+    ```
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Author
+- Gitta - (https://github.com/gitober)
+
