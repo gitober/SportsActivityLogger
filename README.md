@@ -40,19 +40,13 @@ Compile the code and run tests:
 mvn clean install
 ```
 
-### 3. Run the Application
-To execute the application locally, use:
-```bash
-mvn exec:java -Dexec.mainClass="Main"
-```
-
-### 4. Testing
+### 3. Testing
 To run the tests, use:
 ```bash
 mvn test
 ```
 
-### 5. Continuous Integration with Jenkins
+### 4. Continuous Integration with Jenkins
 1. **Set up Jenkins**: Install Jenkins on your system or use a cloud-based instance.
 2. **Create a Pipeline**: In Jenkins, create a new pipeline job and use the following stages:
    - **Checkout**: Pull the latest code from your GitHub repository.
@@ -107,7 +101,7 @@ mvn test
     }
     ```
 
-### 6. Containerization with Docker
+### 5. Containerization with Docker
 1. **Create a Dockerfile**: Add the following `Dockerfile` to your project directory:
     ```dockerfile
     # Use Maven to build the application
@@ -132,7 +126,7 @@ mvn test
     docker push your-dockerhub-username/sportsactivitylogger
     ```
 
-### 7. Running the Application in Docker Hub Lab
+### 6. Running the Application in Docker Hub Lab
 1. Go to [Play with Docker](https://labs.play-with-docker.com/) and sign in.
 2. Click "Start" to launch a new Docker environment.
 3. Pull your Docker image:
@@ -143,9 +137,6 @@ mvn test
     ```bash
     docker run -it --rm your-dockerhub-username/sportsactivitylogger
     ```
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Author
 - Gitta - (https://github.com/gitober)
